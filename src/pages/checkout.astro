@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CheckoutForm from '../components/CheckoutForm.jsx';
+---
+
+<Layout title="Checkout — nishTees" description="Checkout securely at nishTees.">
+  <Header />
+
+  <main class="mx-auto max-w-5xl px-5 py-12 sm:px-8">
+    <h1 class="font-display text-4xl tracking-tight sm:text-5xl">Checkout</h1>
+    <CheckoutForm client:load />
+  </main>
+
+  <Footer />
+</Layout>
