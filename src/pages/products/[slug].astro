@@ -45,7 +45,13 @@ const careInstructions = [
         </p>
 
         <div class="mt-8">
-          <AddToBag client:load variants={product.variants} />
+          <AddToBag
+            client:load
+            variants={product.variants}
+            slug={product.slug}
+            name={product.name}
+            pricePaise={product.price_paise}
+          />
         </div>
 
         {

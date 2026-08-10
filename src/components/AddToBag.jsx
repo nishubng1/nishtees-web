@@ -1,18 +1,29 @@
 import { useState } from 'react';
+import { addItem } from '../lib/cart.js';
 
 /**
- * Size selection + add-to-bag UI. The cart itself lands next session —
- * onAddToBag is a no-op stub so this button does nothing yet beyond
- * requiring a size to be picked.
+ * Size selection + add-to-bag. Adds the chosen variant to the local cart
+ * store and shows a short confirmation with a link to the bag.
  *
  * Props:
- *   variants  [{ sku, size }]  (from build-time catalogue read)
+ *   variants    [{ sku, size }]  (from the build-time catalogue read)
+ *   slug, name  product identity, stored for cart display
+ *   pricePaise  display price only — the server re-prices at checkout
  */
-export default function AddToBag({ variants }) {
+export default function AddToBag({ variants, slug, name, pricePaise }) {
   const [selectedSku, setSelectedSku] = useState(null);
+  const [added, setAdded] = useState(false);
+
+  function selectSize(sku) {
+    setSelectedSku(sku);
+    setAdded(false);
+  }
 
   function handleAddToBag() {
-    // TODO(next session): wire to cart state.
+    if (!selectedSku) return;
+    const v = variants.find((x) => x.sku === selectedSku);
+    addItem({ sku: v.sku, size: v.size, slug, name, pricePaise });
+    setAdded(true);
   }
 
   return (
@@ -28,7 +39,7 @@ export default function AddToBag({ variants }) {
               type="button"
               role="radio"
               aria-checked={selectedSku === v.sku}
-              onClick={() => setSelectedSku(v.sku)}
+              onClick={() => selectSize(v.sku)}
               className={`min-w-11 rounded-none border px-4 py-2 text-sm font-medium uppercase transition ${
                 selectedSku === v.sku
                   ? 'border-ink bg-ink text-paper'
@@ -49,6 +60,15 @@ export default function AddToBag({ variants }) {
       >
         Add to Bag
       </button>
+
+      {added && (
+        <p role="status" className="mt-3 text-sm text-ink/80">
+          Added to your bag.{' '}
+          <a href="/cart" className="font-semibold underline underline-offset-2 hover:text-accent">
+            View bag
+          </a>
+        </p>
+      )}
     </div>
   );
 }
