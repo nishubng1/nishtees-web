@@ -49,16 +49,19 @@ export default function CheckoutButton({
       if (!res.ok) {
         setError(data.error ?? 'Something went wrong. Try again.');
         setFieldErrors(data.fields ?? {});
+        setBusy(false);
         return;
       }
 
       if (data.mode === 'cod') {
+        setBusy(false);
         onPlaced(data.orderNumber);
         return;
       }
 
       if (!window.Razorpay) {
         setError('Payment is still loading. Give it a moment and try again.');
+        setBusy(false);
         return;
       }
 
@@ -89,10 +92,13 @@ export default function CheckoutButton({
       });
 
       rzp.open();
+      // From here the Razorpay modal owns the flow. `busy` stays set on
+      // purpose: handler() navigates away on success, and ondismiss /
+      // payment.failed clear it. Every path that does NOT reach the modal
+      // has already reset `busy` above.
     } catch {
       setError('Network problem. Check your connection and try again.');
-    } finally {
-      if (paymentMethod === 'cod') setBusy(false);
+      setBusy(false);
     }
   }
 
