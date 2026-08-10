@@ -1,0 +1,17 @@
+---
+import ProductImage from './ProductImage.astro';
+import { formatPaise } from '../lib/format.js';
+
+const { product } = Astro.props;
+---
+
+<a
+  href={`/products/${product.slug}`}
+  class="group block border border-ink/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+>
+  <ProductImage alt={product.name} tone="light" />
+  <div class="p-4">
+    <h3 class="text-base font-medium">{product.name}</h3>
+    <p class="mt-1 font-medium tabular-nums">{formatPaise(product.price_paise)}</p>
+  </div>
+</a>

@@ -1,0 +1,38 @@
+---
+const points = [
+  {
+    label: '240 GSM Heavyweight',
+    icon: 'M4 4h16v4H4zM6 8v12h12V8',
+  },
+  {
+    label: 'Free Shipping Over ₹999',
+    icon: 'M3 7h11v8H3zM14 10h4l3 3v2h-7zM6 19a2 2 0 100-4 2 2 0 000 4zM17 19a2 2 0 100-4 2 2 0 000 4z',
+  },
+  {
+    label: '7-Day Returns',
+    icon: 'M4 12a8 8 0 108-8M4 4v6h6M12 8v4l3 3',
+  },
+];
+---
+
+<section class="border-b border-ink/10 bg-paper" aria-label="Why shop with us">
+  <div class="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-ink/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0 px-5 sm:px-8">
+    {
+      points.map((p) => (
+        <div class="flex items-center gap-3 py-6">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            class="h-6 w-6 shrink-0 text-accent"
+            aria-hidden="true"
+          >
+            <path d={p.icon} stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="text-sm font-semibold uppercase tracking-wide">{p.label}</span>
+        </div>
+      ))
+    }
+  </div>
+</section>

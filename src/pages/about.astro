@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="About — nishTees" description="nishTees is a Bangalore-made streetwear brand building 240 GSM oversized tees.">
+  <Header />
+
+  <main class="mx-auto max-w-3xl px-5 py-16 sm:px-8">
+    <h1 class="font-display text-4xl tracking-tight sm:text-5xl">About nishTees</h1>
+
+    <p class="mt-8 font-display text-2xl leading-tight tracking-tight sm:text-3xl">
+      A small, fixed lineup of heavyweight tees, made properly, sold direct.
+    </p>
+
+    <div class="mt-8 space-y-5 text-ink/80">
+      <p>
+        nishTees started in Bangalore with one problem: most oversized tees
+        sold in India are thin, shapeless, and lose their fit after a couple
+        of washes. We wanted a tee that held its structure — heavyweight 240
+        GSM cotton, a drop-shoulder cut that's cut generously on purpose, not
+        because it's cheaper to sew.
+      </p>
+      <p>
+        There's no seasonal drop calendar here. A handful of SKUs, restocked
+        when they sell out, priced to reflect the fabric weight rather than
+        marketing spend.
+      </p>
+      <p>Every tee is made and shipped from India.</p>
+    </div>
+
+    <div class="mt-10 border-t border-ink/10 pt-6">
+      <a href="/#collection" class="inline-block bg-accent px-8 py-4 text-sm font-semibold uppercase tracking-wide text-ink transition hover:opacity-90">
+        Shop the Collection
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

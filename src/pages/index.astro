@@ -1,14 +1,66 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ProductImage from '../components/ProductImage.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getProducts } from '../lib/catalogue.js';
+
+const products = await getProducts();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>nishTees — coming soon</title>
-	</head>
-	<body class="flex min-h-screen items-center justify-center bg-black text-white">
-		<h1 class="text-3xl font-bold tracking-tight">nishTees — coming soon</h1>
-	</body>
-</html>
+<Layout title="nishTees — 240 GSM Oversized Tees, Made in India">
+  <Header />
+
+  <section class="bg-ink text-paper">
+    <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:py-0">
+      <div class="order-2 lg:order-1">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+          240 GSM &middot; Drop-Shoulder
+        </p>
+        <h1 class="mt-4 font-display text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+          OVERSIZED.
+          <br />
+          BUILT LIKE ARMOUR.
+        </h1>
+        <p class="mt-6 max-w-md text-paper/70">
+          Heavyweight cotton tees cut for the drop-shoulder fit. No mall-brand
+          thin cotton, no shrinkage after wash two.
+        </p>
+        <a
+          href="#collection"
+          class="mt-8 inline-block bg-accent px-8 py-4 text-sm font-semibold uppercase tracking-wide text-ink transition hover:opacity-90"
+        >
+          Shop the Drop
+        </a>
+      </div>
+      <div class="order-1 lg:order-2">
+        <ProductImage alt="" tone="dark" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section id="collection" class="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+    <h2 class="font-display text-3xl tracking-tight sm:text-4xl">The Collection</h2>
+    <div class="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+      {products.map((product) => <ProductCard product={product} />)}
+    </div>
+  </section>
+
+  <section class="bg-ink text-paper">
+    <div class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8">
+      <p class="font-display text-2xl leading-tight tracking-tight sm:text-3xl">
+        Built in Bangalore for people who wear one tee all day, every day.
+      </p>
+      <p class="mt-4 text-paper/60">
+        No seasonal drops for the sake of it. A small, fixed lineup, made
+        properly, restocked when it sells out.
+      </p>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

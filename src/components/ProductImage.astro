@@ -1,0 +1,45 @@
+---
+/**
+ * Reserves a 4:5 box regardless of whether a real photo exists yet, so
+ * dropping in `src` later causes zero layout shift. `tone` picks a fill
+ * that reads correctly against ink or paper backgrounds.
+ */
+const {
+  src,
+  alt = '',
+  tone = 'light',
+  loading = 'lazy',
+  class: className = '',
+} = Astro.props;
+
+const tint = tone === 'dark' ? 'bg-paper/10' : 'bg-ink/5';
+const glyph = tone === 'dark' ? 'text-paper/20' : 'text-ink/15';
+---
+
+<div class={`relative aspect-[4/5] w-full overflow-hidden ${tint} ${className}`}>
+  {
+    src ? (
+      <img
+        src={src}
+        alt={alt}
+        loading={loading}
+        class="h-full w-full object-cover"
+      />
+    ) : (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        class={`absolute inset-0 m-auto h-1/3 w-1/3 ${glyph}`}
+        aria-hidden="true"
+      >
+        <path
+          d="M8 4l2 2h4l2-2 4 4-3 3v9H7v-9L4 8z"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    )
+  }
+</div>

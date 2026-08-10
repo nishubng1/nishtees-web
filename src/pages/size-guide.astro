@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/**
+ * Placeholder measurements for an oversized drop-shoulder cut — replace
+ * with the real garment measurements before launch.
+ */
+const rows = [
+  { size: 'S', chest: 42, length: 27, shoulder: 21, sleeve: 9 },
+  { size: 'M', chest: 44, length: 28, shoulder: 22, sleeve: 9.5 },
+  { size: 'L', chest: 46, length: 29, shoulder: 23, sleeve: 10 },
+  { size: 'XL', chest: 48, length: 30, shoulder: 24, sleeve: 10.5 },
+  { size: 'XXL', chest: 50, length: 31, shoulder: 25, sleeve: 11 },
+];
+---
+
+<Layout title="Size Guide — nishTees" description="Measurements in inches for nishTees oversized tees.">
+  <Header />
+
+  <main class="mx-auto max-w-3xl px-5 py-12 sm:px-8">
+    <h1 class="font-display text-4xl tracking-tight sm:text-5xl">Size Guide</h1>
+    <p class="mt-4 text-ink/70">
+      All measurements in inches, taken flat. For an oversized fit, most
+      people go with their usual size or one size down for a closer drape.
+    </p>
+
+    <div class="mt-8 overflow-x-auto">
+      <table class="w-full min-w-[480px] border-collapse text-left text-sm">
+        <thead>
+          <tr class="border-b-2 border-ink">
+            <th scope="col" class="sticky left-0 bg-paper py-3 pr-4 font-semibold uppercase tracking-wide">
+              Size
+            </th>
+            <th scope="col" class="py-3 pr-4 font-semibold uppercase tracking-wide">Chest</th>
+            <th scope="col" class="py-3 pr-4 font-semibold uppercase tracking-wide">Length</th>
+            <th scope="col" class="py-3 pr-4 font-semibold uppercase tracking-wide">Shoulder</th>
+            <th scope="col" class="py-3 font-semibold uppercase tracking-wide">Sleeve</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => (
+              <tr class="border-b border-ink/10">
+                <th scope="row" class="sticky left-0 bg-paper py-3 pr-4 font-medium">
+                  {row.size}
+                </th>
+                <td class="py-3 pr-4 tabular-nums">{row.chest}"</td>
+                <td class="py-3 pr-4 tabular-nums">{row.length}"</td>
+                <td class="py-3 pr-4 tabular-nums">{row.shoulder}"</td>
+                <td class="py-3 tabular-nums">{row.sleeve}"</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-6 text-xs text-ink/50">
+      A half-inch of variation between pieces is normal for garment-washed cotton.
+    </p>
+  </main>
+
+  <Footer />
+</Layout>
