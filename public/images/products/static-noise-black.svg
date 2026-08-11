@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Static Noise Oversized Tee in black">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DEDCD4"/>
+      <stop offset="1" stop-color="#CFCDC4"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="0.5" cy="0.4" r="0.55">
+      <stop offset="0" stop-color="#ECEAE3" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ECEAE3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect width="800" height="1000" fill="url(#spot)"/>
+  <ellipse cx="400" cy="815" rx="175" ry="24" fill="#0b0b0c" opacity="0.06"/>
+  <g transform="translate(400 500) scale(33)" stroke-linejoin="round">
+    <path transform="translate(-12 -12.5)" d="M8 4l2 2h4l2-2 4 4-3 3v9H7v-9L4 8z"
+          fill="#161616" stroke="#2b2b2b" stroke-width="0.09"/>
+    <rect transform="translate(-12 -12.5)" x="10.35" y="16.4" width="1.5" height="2.1" rx="0.18" fill="#ff5a1f"/>
+  </g>
+</svg>

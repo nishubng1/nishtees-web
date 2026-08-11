@@ -10,6 +10,7 @@ export const DUMMY_PRODUCTS = [
   {
     id: 'demo-1',
     slug: 'static-noise-black',
+    image: '/images/products/static-noise-black.svg',
     name: 'Static Noise Oversized Tee — Black',
     description:
       '240 GSM heavyweight cotton, drop-shoulder cut, bio-washed and pre-shrunk. The everyday black that holds its shape.',
@@ -25,6 +26,7 @@ export const DUMMY_PRODUCTS = [
   {
     id: 'demo-2',
     slug: 'concrete-wash-bone',
+    image: '/images/products/concrete-wash-bone.svg',
     name: 'Concrete Wash Oversized Tee — Bone',
     description:
       '240 GSM oversized tee in a washed off-white. Boxy drop-shoulder fit, garment-dyed for a soft, lived-in hand.',
@@ -40,6 +42,7 @@ export const DUMMY_PRODUCTS = [
   {
     id: 'demo-3',
     slug: 'signal-lost-olive',
+    image: '/images/products/signal-lost-olive.svg',
     name: 'Signal Lost Oversized Tee — Olive',
     description:
       '240 GSM heavyweight olive tee with a structured drop-shoulder cut that keeps its drape wash after wash.',
