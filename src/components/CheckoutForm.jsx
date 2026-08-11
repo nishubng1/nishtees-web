@@ -3,6 +3,7 @@ import { useCart } from '../lib/useCart.js';
 import { clearCart } from '../lib/cart.js';
 import { formatPaise } from '../lib/format.js';
 import CheckoutButton from './CheckoutButton.jsx';
+import DummyCheckoutButton from './DummyCheckoutButton.jsx';
 
 // Static list — a plain select is friendlier (and more accurate for
 // shipping) than a free-text state field. The server only checks it's
@@ -22,7 +23,7 @@ const field =
   'mt-1 w-full rounded-none border border-ink/20 bg-paper px-3 py-2.5 text-sm focus-visible:border-ink';
 const label = 'block text-xs font-semibold uppercase tracking-wide text-ink/60';
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ dummy = false }) {
   const cart = useCart();
   const [customer, setCustomer] = useState({ name: '', email: '', phone: '' });
   const [address, setAddress] = useState({
@@ -33,6 +34,7 @@ export default function CheckoutForm() {
 
   const subtotal = cart.reduce((s, it) => s + it.pricePaise * it.quantity, 0);
   const items = cart.map((it) => ({ sku: it.sku, quantity: it.quantity }));
+  const PlaceOrder = dummy ? DummyCheckoutButton : CheckoutButton;
 
   function setC(key) {
     return (e) => setCustomer((c) => ({ ...c, [key]: e.target.value }));
@@ -54,9 +56,11 @@ export default function CheckoutForm() {
           Your order number is <strong>{placed.orderNumber}</strong>.
         </p>
         <p className="mt-2 text-sm text-ink/70">
-          {placed.method === 'cod'
-            ? "We'll call to confirm your order before we ship it."
-            : "We've emailed your confirmation. Your order ships once payment is verified."}
+          {dummy
+            ? 'This is a demo store — nothing was charged and no email was sent.'
+            : placed.method === 'cod'
+              ? "We'll call to confirm your order before we ship it."
+              : "We've emailed your confirmation. Your order ships once payment is verified."}
         </p>
         <a
           href="/#collection"
@@ -176,13 +180,18 @@ export default function CheckoutForm() {
         </p>
 
         <div className="mt-6">
-          <CheckoutButton
+          <PlaceOrder
             items={items}
             customer={customer}
             address={address}
             paymentMethod={paymentMethod}
             onPlaced={handlePlaced}
           />
+          {dummy && (
+            <p className="mt-3 text-center text-xs text-ink/50">
+              Demo checkout — no payment is taken.
+            </p>
+          )}
         </div>
       </aside>
     </form>

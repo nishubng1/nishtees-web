@@ -3,6 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CheckoutForm from '../components/CheckoutForm.jsx';
+
+// Same check as the catalogue: no Supabase configured -> demo checkout
+// that fakes an order client-side instead of hitting the order API.
+const isDummy = !import.meta.env.SUPABASE_URL || !import.meta.env.SUPABASE_ANON_KEY;
 ---
 
 <Layout title="Checkout — nishTees" description="Checkout securely at nishTees.">
@@ -10,7 +14,7 @@ import CheckoutForm from '../components/CheckoutForm.jsx';
 
   <main class="mx-auto max-w-5xl px-5 py-12 sm:px-8">
     <h1 class="font-display text-4xl tracking-tight sm:text-5xl">Checkout</h1>
-    <CheckoutForm client:load />
+    <CheckoutForm client:load dummy={isDummy} />
   </main>
 
   <Footer />
