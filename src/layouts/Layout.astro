@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import ChatWidget from '../components/ChatWidget.jsx';
 
 const {
   title,
@@ -30,5 +31,6 @@ const {
   </head>
   <body class="bg-paper text-ink antialiased">
     <slot />
+    <ChatWidget client:idle />
   </body>
 </html>
