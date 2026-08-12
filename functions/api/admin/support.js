@@ -29,14 +29,22 @@ async function handleGet(request, db) {
 
   // --- one thread, with transcript ---
   if (id) {
+    // Accept either the UUID or a ticket number (NT-1001, nt1001, or 1001),
+    // so a ticket number from an email is enough to find the conversation.
+    const asTicket = String(id).replace(/^nt-?/i, '');
+    const byTicket = /^\d+$/.test(asTicket);
+
     const { data: thread, error } = await db
-      .from('support_threads').select('*').eq('id', id).maybeSingle();
+      .from('support_threads')
+      .select('*')
+      .eq(byTicket ? 'ticket_no' : 'id', byTicket ? Number(asTicket) : id)
+      .maybeSingle();
     if (error || !thread) return json({ error: 'Not found' }, 404);
 
     const { data: messages } = await db
       .from('support_messages')
       .select('role, body, source, created_at')
-      .eq('thread_id', id)
+      .eq('thread_id', thread.id)
       .order('created_at', { ascending: true });
 
     return json({ thread, messages: messages ?? [] });
@@ -46,7 +54,7 @@ async function handleGet(request, db) {
   const status = url.searchParams.get('status');
   let query = db
     .from('support_threads')
-    .select('id, contact_email, contact_phone, status, escalated, message_count, first_message, note, created_at, last_message_at')
+    .select('id, ticket_no, contact_email, contact_phone, status, escalated, message_count, first_message, note, created_at, last_message_at')
     .order('last_message_at', { ascending: false })
     .limit(100);
 
