@@ -12,6 +12,10 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
+  const [threadId, setThreadId] = useState(null);
+  const [offerHandoff, setOfferHandoff] = useState(false);
+  const [contact, setContact] = useState('');
+  const [handedOff, setHandedOff] = useState(false);
   const endRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -42,9 +46,13 @@ export default function ChatWidget() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ message: question }),
+        body: JSON.stringify({ message: question, thread_id: threadId }),
       });
       const data = await res.json();
+      if (data.thread_id) setThreadId(data.thread_id);
+      // Offer a person only when the bot admitted it couldn't help, and only
+      // once per conversation — repeatedly asking for an email is nagging.
+      if (data.offer_handoff && !handedOff) setOfferHandoff(true);
       setMessages((m) => [...m, {
         role: 'bot',
         text: data.reply ?? "Something went wrong on our side. Email support@nishtees.in and we'll sort it out.",
@@ -57,6 +65,33 @@ export default function ChatWidget() {
     } finally {
       setBusy(false);
       inputRef.current?.focus();
+    }
+  }
+
+  async function requestHuman() {
+    const value = contact.trim();
+    if (!value || busy) return;
+    setBusy(true);
+    try {
+      const isPhone = /^[6-9]\d{9}$/.test(value.replace(/\D/g, ''));
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          thread_id: threadId,
+          contact: isPhone ? { phone: value } : { email: value },
+        }),
+      });
+      const data = await res.json();
+      setMessages((m) => [...m, { role: 'bot', text: data.reply }]);
+      if (data.handed_off) { setHandedOff(true); setOfferHandoff(false); setContact(''); }
+    } catch {
+      setMessages((m) => [...m, {
+        role: 'bot',
+        text: "I couldn't save that. Email support@nishtees.in and we'll pick it up there.",
+      }]);
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -133,6 +168,41 @@ export default function ChatWidget() {
                 </p>
               </div>
             ))}
+
+            {offerHandoff && !handedOff && (
+              <div className="border border-ink/15 bg-ink/[0.03] p-3">
+                <p className="text-sm text-ink/80">
+                  Want a person to answer this? Leave your email or mobile and
+                  we'll get back to you within one working day.
+                </p>
+                <div className="mt-2 flex gap-2">
+                  <label htmlFor="nt-chat-contact" className="sr-only">Email or mobile</label>
+                  <input
+                    id="nt-chat-contact"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && requestHuman()}
+                    placeholder="you@email.com or 98765 43210"
+                    className="min-w-0 flex-1 border border-ink/20 bg-paper px-2 py-1.5 text-sm
+                               text-ink placeholder:text-ink/40 focus:border-ink focus:outline-none"
+                  />
+                  <button
+                    onClick={requestHuman}
+                    disabled={busy || !contact.trim()}
+                    className="bg-accent px-3 py-1.5 text-sm font-semibold text-white
+                               disabled:cursor-not-allowed disabled:bg-ink/25"
+                  >
+                    Send
+                  </button>
+                </div>
+                <button
+                  onClick={() => setOfferHandoff(false)}
+                  className="mt-2 text-xs text-ink/50 underline underline-offset-2"
+                >
+                  No thanks
+                </button>
+              </div>
+            )}
 
             {busy && (
               <p className="text-sm text-ink/40" aria-live="polite">Typing…</p>
