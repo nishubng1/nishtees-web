@@ -4,14 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Support inbox — nishTees</title>
+<title>Support tickets — nishTees</title>
 <style>
-  /* Deliberately plainer than the storefront. This is a work surface:
-     dense, quiet, readable at a glance. The only colour is on things
-     that need you to act. */
+  /* A work surface, not a storefront: dense, quiet, scannable.
+     Colour appears only on things that need action. */
   :root{
     --paper:#f0efea; --panel:#fbfaf7; --ink:#0b0b0c; --muted:#6b6a66;
-    --rule:#d6d4cb; --accent:#ff5a1f; --pine:#25503f;
+    --rule:#d6d4cb; --hair:#e8e6df; --accent:#ff5a1f; --pine:#25503f;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--ink);
@@ -23,6 +22,8 @@
          display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
   header h1{font-size:1rem;font-weight:600;margin:0;letter-spacing:-.01em}
   header .sub{color:#ffffff8c;font-size:.82rem;margin-right:auto}
+  header button{font:inherit;font-size:.85rem;padding:.4rem .8rem;cursor:pointer;
+                background:#ffffff1a;color:#fff;border:1px solid #ffffff33}
 
   nav{display:flex;gap:1.4rem;padding:0 1.25rem;background:var(--panel);
       border-bottom:1px solid var(--rule);overflow-x:auto}
@@ -32,29 +33,33 @@
   nav .badge{display:inline-block;margin-left:.35rem;background:var(--accent);color:#fff;
              font-size:.7rem;padding:0 .35rem;border-radius:2px;font-variant-numeric:tabular-nums}
 
-  main{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--rule)}
-  @media(min-width:900px){ main{grid-template-columns:minmax(0,380px) minmax(0,1fr)} }
+  main{padding:1.25rem;max-width:1400px;margin:0 auto}
 
-  .list,.detail{background:var(--panel);min-height:60vh}
-  .thread{padding:.85rem 1.25rem;border-bottom:1px solid #e8e6df;cursor:pointer;
-          display:block;width:100%;text-align:left;background:none;border-left:3px solid transparent;
-          font:inherit;color:inherit}
-  .thread:hover{background:#f4f2ec}
-  .thread[aria-current="true"]{background:#f4f2ec;border-left-color:var(--accent)}
-  .thread .who{font-weight:500;font-size:.9rem}
-  .thread .who.anon{color:var(--muted);font-weight:400;font-style:italic}
-  .thread .q{color:var(--muted);font-size:.85rem;margin-top:.15rem;
-             display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .thread .meta{margin-top:.35rem;font-size:.72rem;color:var(--muted);
-                display:flex;gap:.6rem;align-items:center}
+  table{width:100%;border-collapse:collapse;background:var(--panel);
+        border:1px solid var(--rule);font-size:.9rem}
+  th{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+     text-align:left;font-weight:600;padding:.6rem .75rem;border-bottom:1px solid var(--rule);
+     white-space:nowrap}
+  td{padding:.65rem .75rem;border-bottom:1px solid var(--hair);vertical-align:top}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:#f4f2ec}
+  tbody tr[aria-current="true"]{background:#f4f2ec;box-shadow:inset 3px 0 0 var(--accent)}
 
-  .tag{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;
-       padding:.1rem .35rem;border:1px solid currentColor}
+  .ticket{font-weight:600;white-space:nowrap}
+  .q{color:var(--ink);max-width:34rem;
+     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .anon{color:var(--muted);font-style:italic}
+  .when{color:var(--muted);white-space:nowrap;font-size:.85rem}
+
+  .tag{display:inline-block;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;
+       padding:.1rem .4rem;border:1px solid currentColor;white-space:nowrap}
   .t-wait{color:var(--accent)} .t-ans{color:var(--pine)} .t-mute{color:var(--muted)}
 
-  .detail{padding:1.25rem}
+  /* Drill-down opens below the table rather than in a modal — you can keep
+     the list in view while reading, which matters when working a queue. */
+  .detail{margin-top:1.25rem;background:var(--panel);border:1px solid var(--rule);padding:1.25rem}
   .detail h2{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
-             color:var(--muted);margin:0 0 .8rem;font-weight:600}
+             color:var(--muted);margin:0 0 1rem;font-weight:600}
   .msg{margin-bottom:.9rem;max-width:46rem}
   .msg .role{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
   .msg .body{white-space:pre-line;margin-top:.2rem;padding:.55rem .75rem;font-size:.92rem}
@@ -65,40 +70,46 @@
 
   .actions{border-top:1px solid var(--rule);margin-top:1.25rem;padding-top:1rem;
            display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-  button.act{font:inherit;font-size:.88rem;padding:.5rem .9rem;cursor:pointer;
-             background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
-  button.act.ghost{background:none;color:var(--ink)}
-  button.act:hover{opacity:.85}
-  a.act{text-decoration:none;display:inline-block}
+  button.act,a.act{font:inherit;font-size:.88rem;padding:.5rem .9rem;cursor:pointer;
+                   background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+                   text-decoration:none;display:inline-block}
+  button.act.ghost,a.act.ghost{background:none;color:var(--ink)}
+  button.act:hover,a.act:hover{opacity:.85}
+  button.act.close{margin-left:auto;background:none;color:var(--muted);border-color:var(--rule)}
 
-  .empty{padding:3rem 1.25rem;text-align:center;color:var(--muted)}
+  .empty{padding:3rem 1.25rem;text-align:center;color:var(--muted);
+         background:var(--panel);border:1px solid var(--rule)}
   .empty b{display:block;color:var(--ink);font-weight:500;margin-bottom:.3rem}
-  .err{margin:1rem 1.25rem;padding:.7rem 1rem;border-left:3px solid var(--accent);background:#ff5a1f10}
+  .err{margin-bottom:1rem;padding:.7rem 1rem;border-left:3px solid var(--accent);background:#ff5a1f10}
   .hide{display:none}
+
+  @media(max-width:760px){
+    .col-opt{display:none}
+    table{font-size:.85rem}
+    td,th{padding:.55rem .5rem}
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Support inbox</h1>
+  <h1>Support tickets</h1>
   <span class="sub" id="summary"></span>
-  <button class="act ghost" id="refresh" style="background:#ffffff1a;color:#fff;border-color:#ffffff33">Refresh</button>
+  <button id="refresh">Refresh</button>
 </header>
 
 <nav id="tabs">
   <button data-status="waiting" aria-selected="true">Waiting <span class="badge" id="b-waiting">0</span></button>
-  <button data-status="open" aria-selected="false">Handled</button>
+  <button data-status="open" aria-selected="false">Bot handled</button>
   <button data-status="answered" aria-selected="false">Answered</button>
+  <button data-status="closed" aria-selected="false">Closed</button>
   <button data-status="all" aria-selected="false">All</button>
 </nav>
 
-<div id="error" class="err hide"></div>
-
 <main>
-  <div class="list" id="list"></div>
-  <div class="detail" id="detail">
-    <div class="empty">Pick a conversation to read it.</div>
-  </div>
+  <div id="error" class="err hide"></div>
+  <div id="table"></div>
+  <div id="detail"></div>
 </main>
 
 <script>
@@ -120,7 +131,7 @@ async function api(path, opts = {}){
   });
   if(res.status === 401){
     sessionStorage.removeItem('nt_admin_key');
-    throw new Error('Admin key rejected. Reload and try again.');
+    throw new Error('Admin key rejected. Reload the page and try again.');
   }
   if(!res.ok) throw new Error((await res.json().catch(()=>({}))).error || 'Request failed');
   return res.json();
@@ -143,43 +154,64 @@ function when(iso){
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-async function loadList(){
+const ticketOf = (t) => t.ticket_no ? 'NT-' + t.ticket_no : '—';
+
+async function loadTable(){
   const d = await api('?status=' + status);
 
   $('b-waiting').textContent = d.counts.waiting ?? 0;
   $('b-waiting').style.display = d.counts.waiting ? '' : 'none';
   $('summary').textContent =
-    `${d.counts.escalated ?? 0} conversations the bot couldn't answer`;
+    `${d.counts.escalated ?? 0} question${d.counts.escalated === 1 ? '' : 's'} the bot couldn't answer`;
 
   if(!d.threads.length){
-    $('list').innerHTML = `<div class="empty"><b>Nothing here.</b>${
-      status === 'waiting' ? 'Nobody is waiting on a reply.' : 'No conversations yet.'}</div>`;
+    $('table').innerHTML = `<div class="empty"><b>No tickets here.</b>${
+      status === 'waiting'
+        ? 'Nobody is waiting on a reply.'
+        : 'Nothing in this list yet.'}</div>`;
+    $('detail').innerHTML = '';
     return;
   }
 
-  $('list').innerHTML = d.threads.map(t => {
-    const who = t.contact_email || t.contact_phone;
-    return `<button class="thread" data-id="${t.id}" ${t.id===currentId?'aria-current="true"':''}>
-      <div class="who ${who?'':'anon'}">${who ? esc(who) : 'No contact left'}</div>
-      <div class="q">${esc(t.first_message) || '(no message)'}</div>
-      <div class="meta">
-        <span class="tag ${t.status==='waiting'?'t-wait':t.status==='answered'?'t-ans':'t-mute'}">${t.status}</span>
-        <span>${t.message_count} msg</span>
-        <span>${when(t.last_message_at)}</span>
-      </div>
-    </button>`;
-  }).join('');
+  $('table').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Ticket</th>
+        <th>Status</th>
+        <th>Customer</th>
+        <th>Question</th>
+        <th class="col-opt">Msgs</th>
+        <th>Last activity</th>
+      </tr></thead>
+      <tbody>
+        ${d.threads.map(t => {
+          const who = t.contact_email || t.contact_phone;
+          return `<tr data-id="${t.id}" ${t.id===currentId?'aria-current="true"':''} tabindex="0">
+            <td class="ticket mono">${ticketOf(t)}</td>
+            <td><span class="tag ${
+              t.status==='waiting'?'t-wait':t.status==='answered'?'t-ans':'t-mute'
+            }">${t.status}</span></td>
+            <td class="${who?'':'anon'}">${who ? esc(who) : 'no contact'}</td>
+            <td class="q">${esc(t.first_message) || '—'}</td>
+            <td class="col-opt mono">${t.message_count}</td>
+            <td class="when">${when(t.last_message_at)}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
 
-  $('list').querySelectorAll('.thread').forEach(b =>
-    b.onclick = () => openThread(b.dataset.id));
+  $('table').querySelectorAll('tbody tr').forEach(row => {
+    row.onclick = () => openTicket(row.dataset.id);
+    row.onkeydown = (e) => { if(e.key === 'Enter') openTicket(row.dataset.id); };
+  });
 }
 
-async function openThread(id){
+async function openTicket(id){
   currentId = id;
-  $('list').querySelectorAll('.thread').forEach(b =>
-    b.setAttribute('aria-current', String(b.dataset.id === id)));
+  $('table').querySelectorAll('tbody tr').forEach(r =>
+    r.setAttribute('aria-current', String(r.dataset.id === id)));
 
-  const d = await api('?id=' + id);
+  const d = await api('?id=' + encodeURIComponent(id));
   const t = d.thread;
   const who = t.contact_email || t.contact_phone;
 
@@ -192,32 +224,44 @@ async function openThread(id){
     </div>`;
   }).join('');
 
+  // Ticket number in the subject line, so a reply thread stays traceable.
   const mailto = t.contact_email
     ? `mailto:${encodeURIComponent(t.contact_email)}?subject=${
-        encodeURIComponent('Re: your question — nishTees')}&body=${
+        encodeURIComponent(`Re: your question (${ticketOf(t)}) — nishTees`)}&body=${
         encodeURIComponent('Hi,\n\nThanks for getting in touch.\n\n')}`
     : null;
   const wa = t.contact_phone ? `https://wa.me/91${t.contact_phone}` : null;
 
   $('detail').innerHTML = `
-    <h2>${who ? esc(who) : 'Anonymous visitor'} · started ${when(t.created_at)}</h2>
-    ${transcript || '<div class="empty">No messages.</div>'}
-    <div class="actions">
-      ${mailto ? `<a class="act" href="${mailto}">Reply by email</a>` : ''}
-      ${wa ? `<a class="act ghost" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
-      ${t.status !== 'answered' ? `<button class="act ghost" data-set="answered">Mark answered</button>` : ''}
-      ${t.status !== 'closed' ? `<button class="act ghost" data-set="closed">Close</button>` : ''}
-    </div>
-    ${!who ? `<p style="color:var(--muted);font-size:.85rem;margin-top:1rem">
-        They left without giving contact details, so there's no way to reply.
-        Worth reading anyway — it tells you what your site doesn't answer.</p>` : ''}`;
+    <div class="detail">
+      <h2>${ticketOf(t)} · ${who ? esc(who) : 'anonymous visitor'} · opened ${when(t.created_at)}</h2>
+      ${transcript || '<div class="empty">No messages.</div>'}
+      <div class="actions">
+        ${mailto ? `<a class="act" href="${mailto}">Reply by email</a>` : ''}
+        ${wa ? `<a class="act ghost" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+        ${t.status !== 'answered' ? `<button class="act ghost" data-set="answered">Mark answered</button>` : ''}
+        ${t.status !== 'closed' ? `<button class="act ghost" data-set="closed">Close</button>` : ''}
+        <button class="act close" id="shut">Close panel</button>
+      </div>
+      ${!who ? `<p style="color:var(--muted);font-size:.85rem;margin-top:1rem">
+          They left without giving contact details, so there's no way to reply.
+          Still worth reading — it tells you what your site doesn't answer.</p>` : ''}
+    </div>`;
+
+  $('detail').scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  $('shut').onclick = () => {
+    currentId = null;
+    $('detail').innerHTML = '';
+    $('table').querySelectorAll('tbody tr').forEach(r => r.setAttribute('aria-current','false'));
+  };
 
   $('detail').querySelectorAll('[data-set]').forEach(b =>
     b.onclick = async () => {
       b.disabled = true;
       try{
-        await api('', {method:'POST', body: JSON.stringify({id, status: b.dataset.set})});
-        await loadList(); await openThread(id);
+        await api('', {method:'POST', body: JSON.stringify({id: t.id, status: b.dataset.set})});
+        await loadTable(); await openTicket(t.id);
       }catch(e){ showError(e.message); b.disabled = false; }
     });
 }
@@ -232,13 +276,13 @@ $('tabs').querySelectorAll('button').forEach(b =>
 
 async function refresh(){
   showError('');
-  try{ await loadList(); }
+  try{ await loadTable(); }
   catch(e){ showError(e.message); }
 }
 
 $('refresh').onclick = refresh;
 refresh();
-setInterval(refresh, 60000); // quiet poll; this is not a live chat queue
+setInterval(refresh, 60000); // quiet poll; this is a queue, not a live chat
 </script>
 </body>
 </html>
